@@ -201,7 +201,7 @@ class SiteController extends Controller
                 'auth_key' => ['required', 'array', 'size:6'],
             ]);
             // Check if the provided auth_key matches the site's authentication key
-            if (implode('', $request->input('auth_key')) !== $site->auth_key) {
+            if (hash_equals($site->auth_key, implode('', $request->input('auth_key'))) === false) {
                 return back()->withErrors(['auth_key' => 'The authentication key is incorrect.']);
             }
         } else {
@@ -209,7 +209,7 @@ class SiteController extends Controller
                 'auth_key' => ['required', 'string', Rules\Password::defaults()],
             ]);
             // Check if the provided auth_key matches the site's authentication key
-            if ($request->input('auth_key') !== $site->auth_key) {
+            if (hash_equals($site->auth_key, $request->input('auth_key')) === false) {
                 return back()->withErrors(['auth_key' => 'The authentication key is incorrect.']);
             }
         }

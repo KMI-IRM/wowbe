@@ -114,7 +114,7 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || $site->auth_key !== $siteAuthenticationKey) {
+        if (is_null($siteAuthenticationKey) || hash_equals($site->auth_key, $siteAuthenticationKey) === false) {
             abort(403, 'Invalid site credentials');
         }
 
@@ -176,7 +176,7 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || $site->auth_key !== $siteAuthenticationKey) {
+        if (is_null($siteAuthenticationKey) || hash_equals($site->auth_key, $siteAuthenticationKey) === false) {
             abort(403, 'Invalid site credentials');
         }
 
