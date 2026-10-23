@@ -153,7 +153,7 @@ class SiteController extends Controller
                 Rule::requiredIf($request->string('tab')->is('password')),
                 Rules\Password::defaults(),
             ],
-'mac_address' => ['nullable', 'string', 'mac_address', Rule::unique(Site::class)->ignore($site)],
+            'mac_address' => ['nullable', 'string', 'mac_address', Rule::unique(Site::class)->ignore($site)],
         ]);
 
         $validated = $validator->validated();
