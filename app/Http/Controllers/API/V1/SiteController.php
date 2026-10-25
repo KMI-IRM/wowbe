@@ -125,7 +125,7 @@ class SiteController extends Controller
             ->first();
 
         $result = [
-            'geometry' => SiteHelper::serializeGeometry($latest->site, false),
+            'geometry' => SiteHelper::serializeGeometry2D($latest->site),
             'timestamp' => $latest?->dateutc->format(DATE_ATOM),
             'primary' => [
                 'dt' => $latest?->temperature,

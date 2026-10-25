@@ -104,7 +104,7 @@ class SendController extends Controller
 
         // Check authorization
         $siteID = $request->input('siteid');
-        $siteAuthenticationKey = $request->input('siteAuthenticationKey');
+        $siteAuthKey = $request->input('siteAuthenticationKey');
 
         if (Str::isUuid($siteID) === true) {
             /** @var Site $site */
@@ -114,7 +114,7 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || hash_equals($site->auth_key, $siteAuthenticationKey) === false) {
+        if (is_null($siteAuthKey) || hash_equals($site->auth_key, $siteAuthKey) === false) {
             abort(403, 'Invalid site credentials');
         }
 
@@ -166,7 +166,7 @@ class SendController extends Controller
 
         // Check authorization
         $siteID = $request->input('ID');
-        $siteAuthenticationKey = $request->input('PASSWORD');
+        $siteAuthKey = $request->input('PASSWORD');
 
         if (Str::isUuid($siteID) === true) {
             /** @var Site $site */
@@ -176,7 +176,7 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || hash_equals($site->auth_key, $siteAuthenticationKey) === false) {
+        if (is_null($siteAuthKey) || hash_equals($site->auth_key, $siteAuthKey) === false) {
             abort(403, 'Invalid site credentials');
         }
 

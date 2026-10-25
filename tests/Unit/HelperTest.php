@@ -17,14 +17,14 @@ class HelperTest extends TestCase
         $observation->latitude = 50.8949242;
         $observation->altitude = 93.0;
 
-        $geometry = ObservationHelper::serializeGeometry($observation, false);
+        $geometry = ObservationHelper::serializeGeometry2D($observation);
 
         $this->assertEquals([
             'type' => 'Point',
             'coordinates' => [4.3415232, 50.8949242],
         ], $geometry);
 
-        $geometryZ = ObservationHelper::serializeGeometry($observation, true);
+        $geometryZ = ObservationHelper::serializeGeometry3D($observation);
 
         $this->assertEquals([
             'type' => 'Point',
@@ -39,14 +39,14 @@ class HelperTest extends TestCase
         $site->latitude = 50.8949242;
         $site->altitude = 93.0;
 
-        $geometry = SiteHelper::serializeGeometry($site, false);
+        $geometry = SiteHelper::serializeGeometry2D($site);
 
         $this->assertEquals([
             'type' => 'Point',
             'coordinates' => [4.3415232, 50.8949242],
         ], $geometry);
 
-        $geometryZ = SiteHelper::serializeGeometry($site, true);
+        $geometryZ = SiteHelper::serializeGeometry3D($site);
 
         $this->assertEquals([
             'type' => 'Point',

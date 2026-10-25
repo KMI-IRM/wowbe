@@ -23,11 +23,9 @@ class SiteIDTest extends TestCase
 
         $rule = new SiteID;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('site_id', $site->id, function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('site_id', $site->id, function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid site UUID should pass validation');
@@ -60,11 +58,9 @@ class SiteIDTest extends TestCase
 
         $rule = new SiteID;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('site_id', $site->short_id, function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('site_id', $site->short_id, function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid site short ID should pass validation');

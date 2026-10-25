@@ -19,6 +19,8 @@ class SiteObserver
 
     /**
      * Handle the Site "updated" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function updated(Site $site): void
     {
@@ -39,6 +41,8 @@ class SiteObserver
 
     /**
      * Handle the Site "restored" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function restored(Site $site): void
     {
@@ -47,6 +51,8 @@ class SiteObserver
 
     /**
      * Handle the Site "force deleted" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function forceDeleted(Site $site): void
     {

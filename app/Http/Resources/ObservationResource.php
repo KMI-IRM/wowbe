@@ -16,6 +16,8 @@ class ObservationResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(Request $request): array
     {
@@ -42,7 +44,7 @@ class ObservationResource extends JsonResource
         return [
             'type' => 'Feature',
             'id' => $observation->id,
-            'geometry' => ObservationHelper::serializeGeometry($observation),
+            'geometry' => ObservationHelper::serializeGeometry3D($observation),
             'properties' => $properties,
             'metadata' => $metadata,
         ];

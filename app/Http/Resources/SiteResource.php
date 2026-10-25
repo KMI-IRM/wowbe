@@ -16,6 +16,8 @@ class SiteResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(Request $request): array
     {
@@ -42,7 +44,7 @@ class SiteResource extends JsonResource
         return [
             'type' => 'Feature',
             'id' => $site->id,
-            'geometry' => SiteHelper::serializeGeometry($site),
+            'geometry' => SiteHelper::serializeGeometry3D($site),
             'properties' => $properties,
             'metadata' => $metadata,
         ];
