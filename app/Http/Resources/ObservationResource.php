@@ -42,7 +42,7 @@ class ObservationResource extends JsonResource
         return [
             'type' => 'Feature',
             'id' => $observation->id,
-            'geometry' => ObservationHelper::serializeGeometry($observation),
+            'geometry' => ObservationHelper::serializeGeometry3D($observation),
             'properties' => $properties,
             'metadata' => $metadata,
         ];

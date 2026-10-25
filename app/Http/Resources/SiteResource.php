@@ -42,7 +42,7 @@ class SiteResource extends JsonResource
         return [
             'type' => 'Feature',
             'id' => $site->id,
-            'geometry' => SiteHelper::serializeGeometry($site),
+            'geometry' => SiteHelper::serializeGeometry3D($site),
             'properties' => $properties,
             'metadata' => $metadata,
         ];
