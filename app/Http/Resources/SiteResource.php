@@ -16,6 +16,8 @@ class SiteResource extends JsonResource
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray(Request $request): array
     {

@@ -20,9 +20,11 @@ class PicturesLimitTest extends TestCase
 
         $rule = new PicturesLimit($site, 'pictures');
         $fails = false;
+        $failMessage = '';
 
-        $rule->validate('pictures', 'some_file', function ($message) use (&$fails) {
+        $rule->validate('pictures', 'some_file', function ($message) use (&$fails, &$failMessage) {
             $fails = true;
+            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Should allow upload when under limit');

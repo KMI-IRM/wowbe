@@ -19,28 +19,12 @@ class UserObserver
     }
 
     /**
-     * Handle the User "updated" event.
-     */
-    public function updated(User $user): void
-    {
-        //
-    }
-
-    /**
      * Handle the User "deleted" event.
      */
     public function deleted(User $user): void
     {
         Mail::to($user)
             ->send(new AccountDeleted($user));
-    }
-
-    /**
-     * Handle the User "restored" event.
-     */
-    public function restored(User $user): void
-    {
-        //
     }
 
     /**
