@@ -96,6 +96,9 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
         ]);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     */
     private static function sqlUTC(): string
     {
         return <<<'SQL'
@@ -121,13 +124,13 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                     END AS humidity,
                     -- Pressure in hPa if in range, else NULL
                     COALESCE(
-                        CASE 
+                        CASE
                             WHEN baromin IS NOT NULL AND (1013.25 * (baromin / 29.92)) BETWEEN 870 AND 1100
                             THEN (1013.25 * (baromin / 29.92))::numeric
                         END,
                         CASE
                             WHEN absbaromin IS NOT NULL AND (1013.25 * (absbaromin / 29.92)) BETWEEN 870 AND 1100
-                                AND tempf IS NOT NULL AND altitude IS NOT NULL 
+                                AND tempf IS NOT NULL AND altitude IS NOT NULL
                                 AND (1013.25 * (absbaromin2baromin(absbaromin, tempf, altitude) / 29.92)) BETWEEN 870 AND 1100
                             THEN (1013.25 * (absbaromin2baromin(absbaromin, tempf, altitude) / 29.92))::numeric
                         END
@@ -168,7 +171,7 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                         THEN soilmoisture::numeric
                     END AS soilmoisture,
                     -- Soil temperature in Celsius if in range, else NULL
-                    CASE 
+                    CASE
                         WHEN ((soiltempf - 32) / 1.8) BETWEEN -90 AND 60
                         THEN ((soiltempf - 32) / 1.8)::numeric
                     END AS soiltemperature,
@@ -180,18 +183,18 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                     -- Rainin in mm/h
                     (rainin * 25.4)::numeric AS rain,
                     -- Rain duration in seconds
-                    CASE 
-                        WHEN dailyrainin > (LAG(dailyrainin) OVER (PARTITION BY site_id ORDER BY dateutc)) 
-                        THEN EXTRACT(EPOCH FROM (dateutc - (LAG(dateutc) OVER (PARTITION BY site_id ORDER BY dateutc)))) 
-                        ELSE 0 
+                    CASE
+                        WHEN dailyrainin > (LAG(dailyrainin) OVER (PARTITION BY site_id ORDER BY dateutc))
+                        THEN EXTRACT(EPOCH FROM (dateutc - (LAG(dateutc) OVER (PARTITION BY site_id ORDER BY dateutc))))
+                        ELSE 0
                     END AS rainduration,
                     -- Solar radiation if in range, else NULL
-                    CASE 
+                    CASE
                         WHEN solarradiation BETWEEN 0 AND 1100
                         THEN solarradiation::numeric
                     END AS solarradiation
                 FROM observations
-                WHERE 
+                WHERE
                     site_id = :site_id
                     AND dateutc >= :from
                     AND dateutc <= :to
@@ -239,6 +242,9 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
         SQL;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     */
     private static function sqlLocal(): string
     {
         return <<<'SQL'
@@ -264,13 +270,13 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                     END AS humidity,
                     -- Pressure in hPa if in range, else NULL
                     COALESCE(
-                        CASE 
+                        CASE
                             WHEN baromin IS NOT NULL AND (1013.25 * (baromin / 29.92)) BETWEEN 870 AND 1100
                             THEN (1013.25 * (baromin / 29.92))::numeric
                         END,
                         CASE
                             WHEN absbaromin IS NOT NULL AND (1013.25 * (absbaromin / 29.92)) BETWEEN 870 AND 1100
-                                AND tempf IS NOT NULL AND o.altitude IS NOT NULL 
+                                AND tempf IS NOT NULL AND o.altitude IS NOT NULL
                                 AND (1013.25 * (absbaromin2baromin(absbaromin, tempf, o.altitude) / 29.92)) BETWEEN 870 AND 1100
                             THEN (1013.25 * (absbaromin2baromin(absbaromin, tempf, o.altitude) / 29.92))::numeric
                         END
@@ -311,7 +317,7 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                         THEN soilmoisture::numeric
                     END AS soilmoisture,
                     -- Soil temperature in Celsius if in range, else NULL
-                    CASE 
+                    CASE
                         WHEN ((soiltempf - 32) / 1.8) BETWEEN -90 AND 60
                         THEN ((soiltempf - 32) / 1.8)::numeric
                     END AS soiltemperature,
@@ -323,19 +329,19 @@ class AggregateObservationsDay implements ShouldBeUnique, ShouldQueue
                     -- Rainin in mm/h
                     (rainin * 25.4)::numeric AS rain,
                     -- Rain duration in seconds
-                    CASE 
-                        WHEN dailyrainin > (LAG(dailyrainin) OVER (PARTITION BY site_id ORDER BY (o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone))) 
-                        THEN EXTRACT(EPOCH FROM ((o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone) - (LAG((o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone)) OVER (PARTITION BY site_id ORDER BY (o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone))))) 
-                        ELSE 0 
+                    CASE
+                        WHEN dailyrainin > (LAG(dailyrainin) OVER (PARTITION BY site_id ORDER BY (o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone)))
+                        THEN EXTRACT(EPOCH FROM ((o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone) - (LAG((o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone)) OVER (PARTITION BY site_id ORDER BY (o.dateutc AT TIME ZONE 'UTC' AT TIME ZONE s.timezone)))))
+                        ELSE 0
                     END AS rainduration,
                     -- Solar radiation if in range, else NULL
-                    CASE 
+                    CASE
                         WHEN o.solarradiation BETWEEN 0 AND 1100
                         THEN o.solarradiation::numeric
                     END AS solarradiation
                 FROM observations o
                 JOIN sites s ON s.id = o.site_id
-                WHERE 
+                WHERE
                     o.site_id = :site_id
                     AND o.dateutc >= :from
                     AND o.dateutc <= :to

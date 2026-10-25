@@ -30,7 +30,7 @@ class ObserverTest extends TestCase
         $user = User::factory()->create();
         $site = Site::factory()->create(['user_id' => $user->id]);
 
-        $observation = Observation::factory()->create([
+        Observation::factory()->create([
             'site_id' => $site->id,
             'dateutc' => '2024-01-01 12:00:00',
         ]);
@@ -97,7 +97,8 @@ class ObserverTest extends TestCase
         Mail::fake();
 
         $user = User::factory()->create();
-        $site = Site::factory()->create(['user_id' => $user->id]);
+
+        Site::factory()->create(['user_id' => $user->id]);
 
         Mail::assertSent(SiteCreated::class, function ($mail) use ($user) {
             return $mail->hasTo($user->email);
@@ -119,7 +120,8 @@ class ObserverTest extends TestCase
     {
         $user = User::factory()->create();
         $site = Site::factory()->create(['user_id' => $user->id]);
-        $observation = Observation::factory()->create(['site_id' => $site->id]);
+
+        Observation::factory()->create(['site_id' => $site->id]);
 
         $observer = new SiteObserver;
         $observer->deleted($site);

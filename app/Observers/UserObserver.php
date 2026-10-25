@@ -20,6 +20,8 @@ class UserObserver
 
     /**
      * Handle the User "updated" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function updated(User $user): void
     {
@@ -37,6 +39,8 @@ class UserObserver
 
     /**
      * Handle the User "restored" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function restored(User $user): void
     {

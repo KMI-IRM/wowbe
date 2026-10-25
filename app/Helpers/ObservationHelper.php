@@ -7,15 +7,28 @@ use App\Models\Observation;
 class ObservationHelper
 {
     /**
-     * Serialize the geometry of a site for GeoJSON.
+     * Serialize the geometry of a site for GeoJSON in 2D.
      *
      * @return array{type:string,coordinates:float[]}
      */
-    public static function serializeGeometry(Observation $observation, bool $altitude = true): array
+    public static function serializeGeometry2D(Observation $observation): array
     {
         return [
             'type' => 'Point',
-            'coordinates' => $altitude === true ? [$observation->longitude, $observation->latitude, $observation->altitude] : [$observation->longitude, $observation->latitude],
+            'coordinates' => [$observation->longitude, $observation->latitude],
+        ];
+    }
+
+    /**
+     * Serialize the geometry of a site for GeoJSON in 3D.
+     *
+     * @return array{type:string,coordinates:float[]}
+     */
+    public static function serializeGeometry3D(Observation $observation): array
+    {
+        return [
+            'type' => 'Point',
+            'coordinates' => [$observation->longitude, $observation->latitude, $observation->altitude],
         ];
     }
 

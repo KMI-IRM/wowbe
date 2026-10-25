@@ -15,6 +15,8 @@ class AuthKey implements ValidationRule
      * Run the validation rule.
      *
      * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

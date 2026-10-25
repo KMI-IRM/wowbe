@@ -8,6 +8,7 @@
     </description>
 
     <rule ref="rulesets/cleancode.xml">
+        <exclude name="ElseExpression" />
         <exclude name="StaticAccess" />
     </rule>
     <rule ref="rulesets/codesize.xml" />
