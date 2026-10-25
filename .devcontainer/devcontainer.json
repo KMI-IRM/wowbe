@@ -18,9 +18,8 @@
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": {
-    "postgresql": "psql -h 127.0.0.1 -U postgres -c \"CREATE DATABASE laravel;\"",
     "composer": "composer install",
-    "laravel": "echo \"APP_KEY=\" > .env && php artisan key:generate && php artisan migrate",
+    "laravel": "echo \"APP_KEY=\" > .env && php artisan key:generate && php artisan migrate --force",
     "npm": "npm clean-install"
   }
 
