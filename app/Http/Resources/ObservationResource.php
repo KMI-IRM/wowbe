@@ -17,7 +17,7 @@ class ObservationResource extends JsonResource
      *
      * @return array<string, mixed>
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(Request $request): array
     {

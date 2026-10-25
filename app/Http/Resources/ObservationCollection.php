@@ -12,7 +12,7 @@ class ObservationCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(Request $request): array
     {

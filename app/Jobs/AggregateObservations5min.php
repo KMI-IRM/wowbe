@@ -106,7 +106,7 @@ class AggregateObservations5min implements ShouldBeUnique, ShouldQueue
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private static function sqlUTC(): string
     {
@@ -248,7 +248,7 @@ class AggregateObservations5min implements ShouldBeUnique, ShouldQueue
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     private static function sqlLocal(): string
     {
