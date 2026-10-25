@@ -513,7 +513,8 @@ class SendTest extends TestCase
 
         /** @var User $user */
         $user = User::factory()->createOne();
-        $site = Site::factory()->createOne(['user_id' => $user->id, 'mac_address' => $macAddress]);
+
+        Site::factory()->createOne(['user_id' => $user->id, 'mac_address' => $macAddress]);
 
         $data = [
             'PASSKEY' => strtoupper(md5($macAddress)),

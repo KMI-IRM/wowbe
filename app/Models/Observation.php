@@ -6,6 +6,7 @@ use App\Observers\ObservationObserver;
 use Database\Factories\ObservationFactory;
 use DateTime;
 use DateTimeInterface;
+use DateTimeZone;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -93,7 +94,7 @@ class Observation extends Model
     public function dateutc(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => new DateTime($value, new \DateTimeZone('UTC')),
+            get: fn (string $value) => new DateTime($value, new DateTimeZone('UTC')),
         );
     }
 

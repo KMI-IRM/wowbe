@@ -20,11 +20,9 @@ class PicturesLimitTest extends TestCase
 
         $rule = new PicturesLimit($site, 'pictures');
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('pictures', 'some_file', function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('pictures', 'some_file', function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Should allow upload when under limit');
@@ -33,7 +31,8 @@ class PicturesLimitTest extends TestCase
     public function test_prevents_upload_when_at_limit(): void
     {
         $user = User::factory()->create();
-        $site = Site::factory()->create(['user_id' => $user->id]);
+
+        Site::factory()->create(['user_id' => $user->id]);
 
         // Use a mock to simulate a site with 4 existing pictures
         $siteMock = $this->createPartialMock(Site::class, ['getMedia']);

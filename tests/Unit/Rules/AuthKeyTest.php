@@ -11,11 +11,9 @@ class AuthKeyTest extends TestCase
     {
         $rule = new AuthKey;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('auth_key', '123456', function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('auth_key', '123456', function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid PIN code should pass validation');
@@ -25,11 +23,9 @@ class AuthKeyTest extends TestCase
     {
         $rule = new AuthKey;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('auth_key', 'securepassword', function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('auth_key', 'securepassword', function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid password should pass validation');
@@ -39,11 +35,9 @@ class AuthKeyTest extends TestCase
     {
         $rule = new AuthKey;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('auth_key', 'short', function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('auth_key', 'short', function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertTrue($fails, 'Invalid password should fail validation');
