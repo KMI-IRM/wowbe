@@ -51,7 +51,7 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd analyze --format sarif --ruleset cleancode --ruleset codesize --ruleset controversial --ruleset design --ruleset naming --ruleset unusedcode --reportfile-sarif phpmd-results.sarif .
+        run: phpmd analyze --format sarif --reportfile-sarif phpmd-results.sarif
         continue-on-error: true
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v4
