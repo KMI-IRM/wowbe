@@ -50,8 +50,6 @@ class BackwardCompatibilityTest extends TestCase
                                 'dt',
                                 'dpt',
                                 'dws',
-                                'dwg',
-                                'dwgd',
                                 'drr',
                                 'dra',
                                 'dm',
