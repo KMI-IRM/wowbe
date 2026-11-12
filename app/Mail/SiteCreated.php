@@ -38,8 +38,11 @@ class SiteCreated extends Mailable
      */
     public function content(): Content
     {
+        /** @phpstan-var view-string $markdown */
+        $markdown = "mail.{$this->locale}.site-created";
+
         return new Content(
-            markdown: "mail.{$this->locale}.site-created",
+            markdown: $markdown,
         );
     }
 

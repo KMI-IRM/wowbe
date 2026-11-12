@@ -38,8 +38,11 @@ class AccountDeleted extends Mailable
      */
     public function content(): Content
     {
+        /** @phpstan-var view-string $markdown */
+        $markdown = "mail.{$this->locale}.account-deleted";
+
         return new Content(
-            markdown: "mail.{$this->locale}.account-deleted",
+            markdown: $markdown,
         );
     }
 
