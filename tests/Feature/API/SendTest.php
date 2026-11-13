@@ -51,32 +51,33 @@ class SendTest extends TestCase
         $this
             ->get('/api/v2/send?'.$query)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('type', 'Feature')
-                ->has('id')
-                ->where('geometry.type', 'Point')
-                ->has('geometry.coordinates.0')
-                ->has('geometry.coordinates.1')
-                ->has('geometry.coordinates.2')
-                ->has('properties.baromin')
-                ->has('properties.absbaromin')
-                ->has('properties.dailyrainin')
-                ->has('properties.dewptf')
-                ->has('properties.humidity')
-                ->has('properties.rainin')
-                ->has('properties.soilmoisture')
-                ->has('properties.soiltempf')
-                ->has('properties.tempf')
-                ->has('properties.visibility')
-                ->has('properties.winddir')
-                ->has('properties.windspeedmph')
-                ->has('properties.windgustmph')
-                ->has('properties.solarradiation')
-                ->has('metadata.created_at')
-                ->has('metadata.updated_at')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->where('geometry.type', 'Point')
+                    ->has('geometry.coordinates.0')
+                    ->has('geometry.coordinates.1')
+                    ->has('geometry.coordinates.2')
+                    ->has('properties.baromin')
+                    ->has('properties.absbaromin')
+                    ->has('properties.dailyrainin')
+                    ->has('properties.dewptf')
+                    ->has('properties.humidity')
+                    ->has('properties.rainin')
+                    ->has('properties.soilmoisture')
+                    ->has('properties.soiltempf')
+                    ->has('properties.tempf')
+                    ->has('properties.visibility')
+                    ->has('properties.winddir')
+                    ->has('properties.windspeedmph')
+                    ->has('properties.windgustmph')
+                    ->has('properties.solarradiation')
+                    ->has('metadata.created_at')
+                    ->has('metadata.updated_at')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
             );
 
         $this->assertDatabaseHas('observations', [
@@ -122,32 +123,33 @@ class SendTest extends TestCase
         $this
             ->get('/api/v2/send/wow?'.$query)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('type', 'Feature')
-                ->has('id')
-                ->where('geometry.type', 'Point')
-                ->has('geometry.coordinates.0')
-                ->has('geometry.coordinates.1')
-                ->has('geometry.coordinates.2')
-                ->has('properties.baromin')
-                ->has('properties.absbaromin')
-                ->has('properties.dailyrainin')
-                ->has('properties.dewptf')
-                ->has('properties.humidity')
-                ->has('properties.rainin')
-                ->has('properties.soilmoisture')
-                ->has('properties.soiltempf')
-                ->has('properties.tempf')
-                ->has('properties.visibility')
-                ->has('properties.winddir')
-                ->has('properties.windspeedmph')
-                ->has('properties.windgustmph')
-                ->has('properties.solarradiation')
-                ->has('metadata.created_at')
-                ->has('metadata.updated_at')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->where('geometry.type', 'Point')
+                    ->has('geometry.coordinates.0')
+                    ->has('geometry.coordinates.1')
+                    ->has('geometry.coordinates.2')
+                    ->has('properties.baromin')
+                    ->has('properties.absbaromin')
+                    ->has('properties.dailyrainin')
+                    ->has('properties.dewptf')
+                    ->has('properties.humidity')
+                    ->has('properties.rainin')
+                    ->has('properties.soilmoisture')
+                    ->has('properties.soiltempf')
+                    ->has('properties.tempf')
+                    ->has('properties.visibility')
+                    ->has('properties.winddir')
+                    ->has('properties.windspeedmph')
+                    ->has('properties.windgustmph')
+                    ->has('properties.solarradiation')
+                    ->has('metadata.created_at')
+                    ->has('metadata.updated_at')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
             );
 
         $this->assertDatabaseHas('observations', [
@@ -165,29 +167,34 @@ class SendTest extends TestCase
 
         $hash = $this->faker->sha256();
         $datetime = now()->utc();
+        $tempf = $this->faker->randomFloat(2, -50, 50);
 
         $data = [
             'siteid' => $site->id,
             'siteAuthenticationKey' => $site->auth_key,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
+            'tempf' => $tempf,
         ];
 
         $this
             ->post('/api/v2/send', $data)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('id')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('id')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
+                    ->where('properties.tempf', $tempf)
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations', [
             'site_id' => $site->id,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
+            'tempf' => $tempf,
         ]);
     }
 
@@ -214,9 +221,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => urlencode('1970-01-01 01:01:01')])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
 
         // Valid datetime format (YYYY-M-D HH:MM:SS)
@@ -224,9 +232,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => '1970-1-1 01:01:01'])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
 
         // Valid datetime format (YYYY-MM-DD H:M:S)
@@ -234,9 +243,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => '1970-01-01 1:1:1'])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
 
         // Valid datetime format (YYYY-MM-DD H:M:S)
@@ -244,9 +254,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => '1970-01-01 1:1:1'])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
 
         // Valid datetime format (YYYY-M-D H:M:S)
@@ -254,9 +265,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => '1970-1-1 1:1:1'])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
 
         // Valid ISO 8601 datetime format (YYYY-MM-DDTHH:MM:SSZ)
@@ -264,9 +276,10 @@ class SendTest extends TestCase
             ->post('/api/v2/send', [...$data, 'dateutc' => '1970-01-01T01:01:01Z'])
             ->assertOk()
             ->assertJsonMissingValidationErrors()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('properties.dateutc', '1970-01-01T01:01:01+00:00')
+                    ->etc()
             );
     }
 
@@ -281,15 +294,17 @@ class SendTest extends TestCase
             'siteAuthenticationKey' => $site->auth_key,
             'dateutc' => now()->utc()->format('Y-m-d H:i:s'),
             'softwaretype' => $this->faker->word(),
+            'tempf' => $this->faker->randomFloat(2, -40, 212),
         ];
 
         $this
             ->post('/api/v2/send', $data)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('id')
-                ->where('properties.site.id', $site->id)
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('id')
+                    ->where('properties.site.id', $site->id)
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations', [
@@ -319,10 +334,11 @@ class SendTest extends TestCase
         $this
             ->post('/api/v2/send', $data)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('properties.absbaromin')
-                ->missing('properties.baromin')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('properties.absbaromin')
+                    ->missing('properties.baromin')
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations_agg_day', [
@@ -368,10 +384,11 @@ class SendTest extends TestCase
         $this
             ->post('/api/v2/send', $data)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('properties.baromin')
-                ->missing('properties.absbaromin')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('properties.baromin')
+                    ->missing('properties.absbaromin')
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations_agg_day', [
@@ -417,10 +434,11 @@ class SendTest extends TestCase
         $this
             ->post('/api/v2/send', $data)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('properties.baromin')
-                ->has('properties.absbaromin')
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('properties.baromin')
+                    ->has('properties.absbaromin')
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations_agg_day', [
@@ -609,5 +627,73 @@ class SendTest extends TestCase
         $this->assertDatabaseHas('observations_agg_5min_local', ['site_id' => $site->id, 'datelocal' => '2000-01-02 00:00:00', 'count' => 2]); // Notice hour + 1
         $this->assertDatabaseHas('observations_agg_day_local', ['site_id' => $site->id, 'date' => '2000-01-01', 'count' => 1]);
         $this->assertDatabaseHas('observations_agg_day_local', ['site_id' => $site->id, 'date' => '2000-01-02', 'count' => 2]);
+    }
+
+    public function test_empty_observation(): void
+    {
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+
+        $datetime = now()->utc();
+
+        // Test that an observation with only -9999 values is discarded but returned as response
+        $data = [
+            'siteid' => $site->id,
+            'siteAuthenticationKey' => $site->auth_key,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'tempf' => -9999,
+        ];
+
+        $this
+            ->post('/api/v2/send', $data)
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->has('geometry')
+                    ->has('metadata')
+                    ->has('properties.tempf')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.site.id', $site->id)
+                    ->where('properties.tempf', null)
+            );
+
+        $this->assertDatabaseEmpty('observations');
+
+        // Test that an observation with at least one valid measurement is saved
+        $absbaromin = $this->faker->randomFloat(2, 28, 31);
+
+        $data = [
+            'siteid' => $site->id,
+            'siteAuthenticationKey' => $site->auth_key,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'absbaromin' => $absbaromin,
+            'tempf' => -9999,
+        ];
+
+        $this
+            ->post('/api/v2/send', $data)
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->has('geometry')
+                    ->has('metadata')
+                    ->has('properties.absbaromin')
+                    ->has('properties.tempf')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.site.id', $site->id)
+                    ->where('properties.tempf', null)
+                    ->where('properties.absbaromin', $absbaromin)
+            );
+
+        $this->assertDatabaseHas('observations', [
+            'site_id' => $site->id,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'tempf' => null,
+            'absbaromin' => $absbaromin,
+        ]);
     }
 }
