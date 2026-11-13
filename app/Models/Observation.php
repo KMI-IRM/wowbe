@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 
 #[ObservedBy([ObservationObserver::class])]
 class Observation extends Model
@@ -72,10 +73,35 @@ class Observation extends Model
     protected static function booted(): void
     {
         static::creating(function (self $observation) {
+            // Assign site coordinates to the observation (if available)
             if (isset($observation->site)) {
                 $observation->longitude = $observation->site->longitude;
                 $observation->latitude = $observation->site->latitude;
                 $observation->altitude = $observation->site->altitude;
+            }
+
+            // Get all attributes that are cast to float
+            $floatAttributes = array_keys(array_filter($observation->casts, fn ($type) => $type === 'float'));
+
+            // Get all attributes except coordinates (measurement attributes)
+            $measurements = Arr::exceptValues(
+                $floatAttributes,
+                ['longitude', 'latitude', 'altitude'],
+                true
+            );
+
+            // Convert -9999 value to null for measurement attributes
+            foreach ($measurements as $key) {
+                if (isset($observation->$key) && (float) $observation->$key === (float) -9999) {
+                    $observation->$key = null;
+                }
+            }
+
+            // Check if there are any measurement attributes with non-null values and discard the observation if none exist
+            $values = Arr::only($observation->getAttributes(), $measurements);
+            $notNullValues = Arr::whereNotNull($values);
+            if (count($notNullValues) === 0) {
+                return false;
             }
         });
     }
