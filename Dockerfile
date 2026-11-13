@@ -7,7 +7,7 @@ FROM alpine:3.24 AS assets
 ARG VITE_APP_NAME
 
 # Install Node.js, PHP, and required extensions
-RUN apk add --no-cache nodejs npm php84 php84-dom php84-exif php84-fileinfo php84-iconv php84-mbstring php84-openssl php84-pdo php84-pdo_sqlite php84-phar php84-session php84-sodium php84-tokenizer php84-xml php84-xmlwriter
+RUN apk add --update --no-cache nodejs npm php84 php84-dom php84-exif php84-fileinfo php84-iconv php84-mbstring php84-openssl php84-pdo php84-pdo_sqlite php84-phar php84-session php84-sodium php84-tokenizer php84-xml php84-xmlwriter
 
 # Create a symlink for PHP 8.4 binary
 RUN ln -s /usr/bin/php84 /usr/bin/php
