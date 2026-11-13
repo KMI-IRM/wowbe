@@ -50,32 +50,33 @@ class SendWeatherUndergroundTest extends TestCase
         $this
             ->get('/api/v2/send?'.$query)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('type', 'Feature')
-                ->has('id')
-                ->where('geometry.type', 'Point')
-                ->has('geometry.coordinates.0')
-                ->has('geometry.coordinates.1')
-                ->has('geometry.coordinates.2')
-                ->has('properties.baromin')
-                ->has('properties.absbaromin')
-                ->has('properties.dailyrainin')
-                ->has('properties.dewptf')
-                ->has('properties.humidity')
-                ->has('properties.rainin')
-                ->has('properties.soilmoisture')
-                ->has('properties.soiltempf')
-                ->has('properties.tempf')
-                ->has('properties.visibility')
-                ->has('properties.winddir')
-                ->has('properties.windspeedmph')
-                ->has('properties.windgustmph')
-                ->has('properties.solarradiation')
-                ->has('metadata.created_at')
-                ->has('metadata.updated_at')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->where('geometry.type', 'Point')
+                    ->has('geometry.coordinates.0')
+                    ->has('geometry.coordinates.1')
+                    ->has('geometry.coordinates.2')
+                    ->has('properties.baromin')
+                    ->has('properties.absbaromin')
+                    ->has('properties.dailyrainin')
+                    ->has('properties.dewptf')
+                    ->has('properties.humidity')
+                    ->has('properties.rainin')
+                    ->has('properties.soilmoisture')
+                    ->has('properties.soiltempf')
+                    ->has('properties.tempf')
+                    ->has('properties.visibility')
+                    ->has('properties.winddir')
+                    ->has('properties.windspeedmph')
+                    ->has('properties.windgustmph')
+                    ->has('properties.solarradiation')
+                    ->has('metadata.created_at')
+                    ->has('metadata.updated_at')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
             );
 
         $this->assertDatabaseHas('observations', [
@@ -121,32 +122,33 @@ class SendWeatherUndergroundTest extends TestCase
         $this
             ->get('/api/v2/send/weatherunderground?'.$query)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->where('type', 'Feature')
-                ->has('id')
-                ->where('geometry.type', 'Point')
-                ->has('geometry.coordinates.0')
-                ->has('geometry.coordinates.1')
-                ->has('geometry.coordinates.2')
-                ->has('properties.baromin')
-                ->has('properties.absbaromin')
-                ->has('properties.dailyrainin')
-                ->has('properties.dewptf')
-                ->has('properties.humidity')
-                ->has('properties.rainin')
-                ->has('properties.soilmoisture')
-                ->has('properties.soiltempf')
-                ->has('properties.tempf')
-                ->has('properties.visibility')
-                ->has('properties.winddir')
-                ->has('properties.windspeedmph')
-                ->has('properties.windgustmph')
-                ->has('properties.solarradiation')
-                ->has('metadata.created_at')
-                ->has('metadata.updated_at')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->where('geometry.type', 'Point')
+                    ->has('geometry.coordinates.0')
+                    ->has('geometry.coordinates.1')
+                    ->has('geometry.coordinates.2')
+                    ->has('properties.baromin')
+                    ->has('properties.absbaromin')
+                    ->has('properties.dailyrainin')
+                    ->has('properties.dewptf')
+                    ->has('properties.humidity')
+                    ->has('properties.rainin')
+                    ->has('properties.soilmoisture')
+                    ->has('properties.soiltempf')
+                    ->has('properties.tempf')
+                    ->has('properties.visibility')
+                    ->has('properties.winddir')
+                    ->has('properties.windspeedmph')
+                    ->has('properties.windgustmph')
+                    ->has('properties.solarradiation')
+                    ->has('metadata.created_at')
+                    ->has('metadata.updated_at')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
             );
 
         $this->assertDatabaseHas('observations', [
@@ -216,18 +218,88 @@ class SendWeatherUndergroundTest extends TestCase
         $this
             ->get('/api/v2/send?'.$query)
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json
-                ->has('id')
-                ->where('properties.dateutc', $datetime->format(DATE_ATOM))
-                ->where('properties.softwaretype', $hash)
-                ->where('properties.site.id', $site->id)
-                ->etc()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->has('id')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.softwaretype', $hash)
+                    ->where('properties.site.id', $site->id)
+                    ->etc()
             );
 
         $this->assertDatabaseHas('observations', [
             'site_id' => $site->id,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
+        ]);
+    }
+
+    public function test_empty_observation(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+
+        $datetime = now()->utc();
+
+        $absbaromin = $this->faker->randomFloat(2, 28, 31);
+
+        // Test that an observation with only -9999 values is discarded but returned as response
+        $query = http_build_query([
+            'ID' => $site->id,
+            'PASSWORD' => $site->auth_key,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'tempf' => -9999,
+        ]);
+
+        $this
+            ->get('/api/v2/send/weatherunderground?'.$query)
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->has('geometry')
+                    ->has('metadata')
+                    ->has('properties.tempf')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.site.id', $site->id)
+                    ->where('properties.tempf', null)
+            );
+
+        $this->assertDatabaseEmpty('observations');
+
+        // Test that an observation with at least one valid measurement is saved
+        $query = http_build_query([
+            'ID' => $site->id,
+            'PASSWORD' => $site->auth_key,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'absbaromin' => $absbaromin,
+            'tempf' => -9999,
+        ]);
+
+        $this
+            ->get('/api/v2/send/weatherunderground?'.$query)
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('type', 'Feature')
+                    ->has('id')
+                    ->has('geometry')
+                    ->has('metadata')
+                    ->has('properties.absbaromin')
+                    ->has('properties.tempf')
+                    ->where('properties.dateutc', $datetime->format(DATE_ATOM))
+                    ->where('properties.site.id', $site->id)
+                    ->where('properties.absbaromin', $absbaromin)
+                    ->where('properties.tempf', null)
+            );
+
+        $this->assertDatabaseHas('observations', [
+            'site_id' => $site->id,
+            'dateutc' => $datetime->format('Y-m-d H:i:s'),
+            'tempf' => null,
+            'absbaromin' => $absbaromin,
         ]);
     }
 }
