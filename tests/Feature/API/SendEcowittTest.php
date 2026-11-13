@@ -217,7 +217,6 @@ class SendEcowittTest extends TestCase
     {
         $macAddress = $this->faker->macAddress();
 
-        /** @var User $user */
         $user = User::factory()->createOne();
         $site = Site::factory()->createOne(['user_id' => $user->id, 'mac_address' => $macAddress]);
 

@@ -236,7 +236,6 @@ class SendWeatherUndergroundTest extends TestCase
 
     public function test_empty_observation(): void
     {
-        /** @var User $user */
         $user = User::factory()->createOne();
         $site = Site::factory()->createOne(['user_id' => $user->id]);
 
