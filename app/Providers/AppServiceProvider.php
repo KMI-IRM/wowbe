@@ -67,6 +67,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(20)->by('site:'.$siteId);
         });
 
+        RateLimiter::for('submission', function (Request $request) {
+            return Limit::perMinute(5);
+        });
+
         Scramble::registerApi('v1', [
             'api_path' => 'api/v1',
             'info' => ['version' => '1.0'],
