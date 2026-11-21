@@ -28,7 +28,7 @@ class EcowittSendRequest extends FormRequest
             'baromrelin' => ['numeric'],
             // Daily Accumulated rainfall so far today (Inches) (float)
             'dailyrainin' => ['numeric'],
-            // Daily Accumulated rainfall (piezo) so far today (Inches)
+            // Daily Accumulated rainfall (piezo) so far today (Inches) (float)
             'drain_piezo' => ['numeric'],
             // Outdoor Humidity (0-100 %) (float)
             'humidity' => ['numeric'],
@@ -36,6 +36,8 @@ class EcowittSendRequest extends FormRequest
             'model' => ['string'],
             // Instantaneous Rain Rate (Inches/h) (float)
             'rainratein' => ['numeric'],
+            // Instantaneous Rain Rate (piezo) (Inches/h) (float)
+            'rrain_piezo' => ['numeric'],
             // Solar Radiation (Watt per Square Metre) (float)
             'solarradiation' => ['numeric'],
             // Outdoor Temperature (Fahrenheit) (float)
