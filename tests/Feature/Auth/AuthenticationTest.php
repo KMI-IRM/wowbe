@@ -58,7 +58,7 @@ class AuthenticationTest extends TestCase
         /** @var User $user */
         $user = User::factory()->create();
 
-        // Make 5 failed login attempts to trigger rate limiting
+        // The login route allows five submissions per minute.
         for ($i = 0; $i < 5; $i++) {
             $this->post('/web/login', [
                 'email' => $user->email,
@@ -66,15 +66,12 @@ class AuthenticationTest extends TestCase
             ]);
         }
 
-        // The 6th attempt should be rate limited
+        // The 6th attempt should be rejected by the route throttle.
         $response = $this->post('/web/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
-        $response->assertSessionHasErrors(['email']);
-        $errors = session('errors');
-        $this->assertNotNull($errors);
-        $this->assertNotEmpty($errors->get('email'));
+        $response->assertStatus(429);
     }
 }
