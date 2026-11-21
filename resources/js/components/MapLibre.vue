@@ -4,7 +4,8 @@
 
 <script lang="ts">
 import { trans } from 'laravel-vue-i18n';
-import { GeolocateControl, GlobeControl, Map, NavigationControl, Popup, ScaleControl } from 'maplibre-gl';
+import { GeolocateControl, GlobeControl, Map, NavigationControl, Popup, ScaleControl, setWorkerUrl } from 'maplibre-gl';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
 
 export default {
@@ -16,6 +17,8 @@ export default {
 
         onMounted(() => {
             const initialState = { lng: 4.4, lat: 50.534, zoom: 8 };
+
+            setWorkerUrl(workerUrl);
 
             const map = new Map({
                 container: container.value,

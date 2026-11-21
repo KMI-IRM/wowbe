@@ -35,7 +35,7 @@ class SiteController extends Controller
         $result = [
             'type' => 'Feature',
             'id' => $latest?->id,
-            'geometry' => SiteHelper::serializeGeometry($latest->site),
+            'geometry' => SiteHelper::serializeGeometry3D($latest->site),
             'properties' => [
                 'site_id' => $site->id, // Required for MapLibre (only integer is allowed for feature.id)
                 'timestamp' => $latest?->dateutc->format(DATE_ATOM),

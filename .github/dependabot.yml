@@ -5,6 +5,14 @@
 
 version: 2
 updates:
+  - package-ecosystem: devcontainers
+    directory: "/"
+    schedule:
+      interval: monthly
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -13,45 +21,25 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    open-pull-requests-limit: 15
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+    groups:
+      production:
+        dependency-type: production
+      development:
+        dependency-type: development
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
-    open-pull-requests-limit: 15
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
     groups:
-      eslint:
-        applies-to: version-updates
-        patterns:
-          - "@eslint*"
-          - "eslint*"
-          - "@vue/eslint-config-typescript"
-          - "typescript-eslint"
-      lucide:
-        applies-to: version-updates
-        patterns:
-          - "lucide*"
-      prettier:
-        applies-to: version-updates
-        patterns:
-          - "prettier*"
-      tailwind:
-        applies-to: version-updates
-        patterns:
-          - "@tailwind*"
-          - "tailwind*"
-      unovis:
-        applies-to: version-updates
-        patterns:
-          - "@unovis/*"
-      vite:
-        applies-to: version-updates
-        patterns:
-          - "@vitejs*"
-          - "laravel-vite-plugin"
-          - "vite*"
-      vue:
-        applies-to: version-updates
-        patterns:
-          - "@vue*"
-          - "*vue*"
+      production:
+        dependency-type: production
+      development:
+        dependency-type: development

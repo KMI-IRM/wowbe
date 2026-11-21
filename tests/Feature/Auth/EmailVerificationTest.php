@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -14,7 +15,7 @@ class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_email_verification_screen_can_be_rendered()
+    public function test_email_verification_screen_can_be_rendered(): void
     {
         /** @var User $user */
         $user = User::factory()->unverified()->create();
@@ -24,7 +25,7 @@ class EmailVerificationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_email_can_be_verified()
+    public function test_email_can_be_verified(): void
     {
         /** @var User $user */
         $user = User::factory()->unverified()->create();
@@ -44,7 +45,7 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
     }
 
-    public function test_email_is_not_verified_with_invalid_hash()
+    public function test_email_is_not_verified_with_invalid_hash(): void
     {
         /** @var User $user */
         $user = User::factory()->unverified()->create();
@@ -60,7 +61,7 @@ class EmailVerificationTest extends TestCase
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
 
-    public function test_email_verification_notification_can_be_sent()
+    public function test_email_verification_notification_can_be_sent(): void
     {
         /** @var User $user */
         $user = User::factory()->unverified()->create();
@@ -69,12 +70,12 @@ class EmailVerificationTest extends TestCase
 
         $response = $this->actingAs($user)->post('/web/email/verification-notification');
 
-        Notification::assertSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+        Notification::assertSentTo($user, VerifyEmail::class);
         $response->assertRedirect();
         $response->assertSessionHas('status', 'verification-link-sent');
     }
 
-    public function test_email_verification_notification_redirects_to_dashboard_if_already_verified()
+    public function test_email_verification_notification_redirects_to_dashboard_if_already_verified(): void
     {
         /** @var User $user */
         $user = User::factory()->create(); // Already verified
@@ -84,7 +85,7 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_email_verification_prompt_renders_for_unverified_user()
+    public function test_email_verification_prompt_renders_for_unverified_user(): void
     {
         /** @var User $user */
         $user = User::factory()->unverified()->create();
@@ -94,7 +95,7 @@ class EmailVerificationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_email_verification_prompt_redirects_for_verified_user()
+    public function test_email_verification_prompt_redirects_for_verified_user(): void
     {
         /** @var User $user */
         $user = User::factory()->create(); // Already verified
@@ -104,7 +105,7 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_email_can_be_verified_when_already_verified()
+    public function test_email_can_be_verified_when_already_verified(): void
     {
         /** @var User $user */
         $user = User::factory()->create(); // Already verified

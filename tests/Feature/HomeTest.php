@@ -9,7 +9,7 @@ class HomeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_redirect_to_dashboard()
+    public function test_redirect_to_dashboard(): void
     {
         $response = $this->get('/');
 

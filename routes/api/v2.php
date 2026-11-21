@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth');
 
 Route::prefix('send')
+    ->middleware('throttle:send')
     ->controller(SendController::class)
     ->group(function () {
         Route::addRoute(['POST', 'GET'], '', SendController::class)->name('api.send');

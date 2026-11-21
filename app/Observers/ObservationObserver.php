@@ -19,6 +19,8 @@ class ObservationObserver
 
     /**
      * Handle the Observation "updated" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function updated(Observation $observation): void
     {
@@ -27,6 +29,8 @@ class ObservationObserver
 
     /**
      * Handle the Observation "deleted" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function deleted(Observation $observation): void
     {
@@ -35,6 +39,8 @@ class ObservationObserver
 
     /**
      * Handle the Observation "restored" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function restored(Observation $observation): void
     {
@@ -43,6 +49,8 @@ class ObservationObserver
 
     /**
      * Handle the Observation "force deleted" event.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function forceDeleted(Observation $observation): void
     {

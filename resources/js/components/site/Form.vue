@@ -42,10 +42,10 @@ const form = useForm({
     website: props.site?.website || '',
     brand: props.site?.brand || '',
     software: props.site?.software || '',
-    mac_address: props.site?.mac_address || '',
     picture_add: null as File | null,
     picture_remove: [] as string[],
     password: '',
+    mac_address: '',
 });
 
 const pictureInput = ref<HTMLInputElement | null>(null);
@@ -277,7 +277,8 @@ const timezones = Intl.supportedValuesOf('timeZone');
             </FormItem>
 
             <FormItem>
-                <Label for="mac_address">{{ $t('form.authentication.pincode') }} / {{ $t('form.authentication.password') }}</Label>
+                <Label for="password">{{ $t('form.authentication.pincode') }} / {{ $t('form.authentication.password') }}</Label>
+                <p class="text-muted-foreground text-sm">{{ $t('form.authentication.alphanumeric_hint') }}</p>
                 <Input id="password" type="string" v-model="form.password" />
                 <InputError :message="form.errors.password" />
             </FormItem>

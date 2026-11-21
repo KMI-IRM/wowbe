@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\HealthCheckProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\HealthCheckProvider::class,
+    AppServiceProvider::class,
+    HealthCheckProvider::class,
 ];

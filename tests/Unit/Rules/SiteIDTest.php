@@ -13,7 +13,7 @@ class SiteIDTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_validates_existing_site_uuid()
+    public function test_validates_existing_site_uuid(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -23,17 +23,15 @@ class SiteIDTest extends TestCase
 
         $rule = new SiteID;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('site_id', $site->id, function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('site_id', $site->id, function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid site UUID should pass validation');
     }
 
-    public function test_fails_for_non_existent_uuid()
+    public function test_fails_for_non_existent_uuid(): void
     {
         $nonExistentUuid = (string) Str::uuid();
 
@@ -50,7 +48,7 @@ class SiteIDTest extends TestCase
         $this->assertStringContainsString('must be a valid site UUID', $failMessage);
     }
 
-    public function test_validates_existing_site_short_id()
+    public function test_validates_existing_site_short_id(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -60,17 +58,15 @@ class SiteIDTest extends TestCase
 
         $rule = new SiteID;
         $fails = false;
-        $failMessage = '';
 
-        $rule->validate('site_id', $site->short_id, function ($message) use (&$fails, &$failMessage) {
+        $rule->validate('site_id', $site->short_id, function () use (&$fails) {
             $fails = true;
-            $failMessage = $message;
         });
 
         $this->assertFalse($fails, 'Valid site short ID should pass validation');
     }
 
-    public function test_fails_for_non_existent_short_id()
+    public function test_fails_for_non_existent_short_id(): void
     {
         $nonExistentShortId = 'NONEXISTENT';
 

@@ -7,15 +7,28 @@ use App\Models\Site;
 class SiteHelper
 {
     /**
-     * Serialize the geometry of a site for GeoJSON.
+     * Serialize the geometry of a site for GeoJSON in 2D.
      *
      * @return array{type:string,coordinates:float[]}
      */
-    public static function serializeGeometry(Site $site, bool $altitude = true): array
+    public static function serializeGeometry2D(Site $site): array
     {
         return [
             'type' => 'Point',
-            'coordinates' => $altitude === true ? [$site->longitude, $site->latitude, $site->altitude] : [$site->longitude, $site->latitude],
+            'coordinates' => [$site->longitude, $site->latitude],
+        ];
+    }
+
+    /**
+     * Serialize the geometry of a site for GeoJSON in 3D.
+     *
+     * @return array{type:string,coordinates:float[]}
+     */
+    public static function serializeGeometry3D(Site $site): array
+    {
+        return [
+            'type' => 'Point',
+            'coordinates' => [$site->longitude, $site->latitude, $site->altitude],
         ];
     }
 

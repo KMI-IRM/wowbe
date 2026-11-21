@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Mail\AccountCreated;
+use App\Mail\AccountDeleted;
+use App\Mail\SiteCreated;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,17 +37,17 @@ class ConsoleTest extends TestCase
         $this->artisan('app:test-email')
             ->expectsQuestion('Please enter the recipient email address for the test email(s):', 'test@example.com')
             ->expectsQuestion('Which email do you want to send?', [
-                \App\Mail\AccountCreated::class,
-                \App\Mail\AccountDeleted::class,
-                \App\Mail\SiteCreated::class,
+                AccountCreated::class,
+                AccountDeleted::class,
+                SiteCreated::class,
             ])
             ->expectsQuestion('Which locale do you want to use?', 'en')
             ->expectsOutput('Test email(s) sent successfully.')
             ->assertSuccessful();
 
-        Mail::assertSent(\App\Mail\AccountCreated::class);
-        Mail::assertSent(\App\Mail\AccountDeleted::class);
-        Mail::assertSent(\App\Mail\SiteCreated::class);
+        Mail::assertSent(AccountCreated::class);
+        Mail::assertSent(AccountDeleted::class);
+        Mail::assertSent(SiteCreated::class);
 
         Mail::assertSentCount(3);
     }

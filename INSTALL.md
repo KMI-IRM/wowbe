@@ -30,40 +30,54 @@ Documentation: <https://docs.github.com/en/developers/apps/building-oauth-apps/c
 
 ## Run locally
 
-### Start the application
-
-#### Use PHP Built-in Server
+### Use PHP Built-in Server
 
 Copy the `.env.example` file to `.env` and set your environment variables accordingly.
 
 Then run the following command to start the PHP built-in server:
 
 ```bash
-php artisan serve
+php artisan dev
 ```
 
-#### Use Laravel Octane
+More documentation about the Dev Command is available here: <https://laravel.com/framework/docs/artisan#the-dev-command>
+
+### Use [Laravel Octane](https://laravel.com/framework/docs/octane)
 
 Copy the `.env.example` file to `.env` and set your environment variables accordingly.
 
-Then run the following command to start the Laravel Octane server:
+Then run the following command to start the [Laravel Octane](https://laravel.com/framework/docs/octane) server:
 
 ```bash
 php artisan octane:frankenphp
 ```
 
-#### Use Docker
+### Use Docker
+
+#### Use pre-built Docker container
+
+We publish a Docker image in the GitHub Container Registry: <https://github.com/KMI-IRM/wowbe/pkgs/container/wowbe>
+
+Copy the `.env.example` file to `.env` and set your environment variables accordingly.
+
+Then run the following command to pull and run the Docker container:
+
+```bash
+docker run --publish 8000:8000 --env-file .env --detach ghcr.io/kmi-irm/wowbe:latest
+```
+
+#### Build Docker container locally
 
 Copy the `.env.example` file to `.env` and set your environment variables accordingly.
 
 Then run the following command to build and run the Docker container:
 
 ```bash
-docker build --tag wow-be --label "project=wow-be" .
-docker run --publish 8000:8000 --env-file .env --detach wow-be
+docker build --tag wowbe .
+docker run --publish 8000:8000 --env-file .env --detach wowbe
 ```
 
-#### Use Docker Compose
+### Use Docker Compose
 
 Set your environment variables accordingly in the `.env.example` file.
 
@@ -80,7 +94,7 @@ docker compose up --build --force-recreate --detach
 > docker compose -f docker-compose-local.yml up --build --force-recreate --detach
 > ```
 
-### Finalize the installation
+## Setup PostgreSQL database
 
 ```bash
 php artisan migrate

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignUuid('site_id')->constrained('sites')->cascadeOnDelete();
             $table->dateTime('dateutc');
-            $table->string('softwaretype');
+            $table->string('softwaretype')->nullable();
             $table->float('baromin')->nullable();
             $table->float('dailyrainin')->nullable();
             $table->float('dewptf')->nullable();

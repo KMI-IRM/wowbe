@@ -125,7 +125,7 @@ class SiteController extends Controller
             ->first();
 
         $result = [
-            'geometry' => SiteHelper::serializeGeometry($latest->site, false),
+            'geometry' => SiteHelper::serializeGeometry2D($latest->site),
             'timestamp' => $latest?->dateutc->format(DATE_ATOM),
             'primary' => [
                 'dt' => $latest?->temperature,
@@ -180,14 +180,14 @@ class SiteController extends Controller
     /**
      * Get the daily summaries for a specific site.
      */
-    public function daily(Request $request, Site $site): JsonResponse
+    public function daily(Request $request, Site $site, bool $local = false): JsonResponse
     {
         $validated = $request->validate([
             'day1' => ['date_format:Y-m-d\\TH:i:s.vp'],
             'day2' => ['date_format:Y-m-d\\TH:i:s.vp'],
         ]);
 
-        $dailySummaries = $site->dayAggregate();
+        $dailySummaries = $local === true ? $site->dayAggregateLocal() : $site->dayAggregate();
 
         if (isset($validated['day1'], $validated['day2'])) {
             $dailySummaries
@@ -238,5 +238,18 @@ class SiteController extends Controller
             ]);
 
         return response()->json($result);
+    }
+
+    /**
+     * Get the daily summaries in local time for a specific site.
+     */
+    public function dailyLocal(Request $request, Site $site): JsonResponse
+    {
+        $request->validate([
+            'day1' => ['date_format:Y-m-d\\TH:i:s.vp'],
+            'day2' => ['date_format:Y-m-d\\TH:i:s.vp'],
+        ]);
+
+        return $this->daily($request, $site, true);
     }
 }

@@ -51,7 +51,7 @@ class ObservationController extends Controller
                 $latest = $site->fiveMinutesAggregate[0];
 
                 return [
-                    'geometry' => SiteHelper::serializeGeometry($site, false),
+                    'geometry' => SiteHelper::serializeGeometry2D($site),
                     'properties' => [
                         'siteId' => $site->id,
                         'siteName' => $site->name,

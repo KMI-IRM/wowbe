@@ -1,0 +1,132 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  quality-php:
+    name: PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Validate composer.json
+        run: composer validate
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Run Pint
+        run: composer run pint
+      - name: Run Larastan
+        run: composer run larastan
+
+  quality-js:
+    name: JavaScript/TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Prettier
+        run: npm run prettier
+      # - name: Run ESLint
+      #   run: npm run eslint
+
+  cs-php-phpmd:
+    name: Code Scanning - PHP - PHPMD
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: phpmd
+      - name: Run PHPMD
+        run: phpmd analyze --format sarif --reportfile-sarif phpmd-results.sarif
+        continue-on-error: true
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: phpmd-results.sarif
+          wait-for-processing: true
+
+  cs-js-eslint:
+    name: Code Scanning - JavaScript/TypeScript - ESLint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Install ESLint
+        run: |
+          npm install eslint
+          npm install @microsoft/eslint-formatter-sarif
+      - name: Run ESLint
+        env:
+          SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
+        run: npx eslint .
+          --ext .js,.jsx,.ts,.tsx
+          --format @microsoft/eslint-formatter-sarif
+          --output-file eslint-results.sarif
+        continue-on-error: true
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
+
+  codeql-js:
+    name: CodeQL - JavaScript/TypeScript
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    steps:
+    - uses: actions/checkout@v7
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: javascript-typescript
+        build-mode: none
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:javascript-typescript"
+
+  codeql-ga:
+    name: CodeQL - GitHub Actions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    steps:
+    - uses: actions/checkout@v7
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: actions
+        build-mode: none
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:actions"

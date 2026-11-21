@@ -5,7 +5,9 @@
 
 <script lang="ts">
 import MaplibreGeocoder, { CarmenGeojsonFeature, MaplibreGeocoderApiConfig, MaplibreGeocoderFeatureResults } from '@maplibre/maplibre-gl-geocoder';
-import maplibregl, { GeolocateControl, Map } from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import { GeolocateControl, Map, Marker, setWorkerUrl } from 'maplibre-gl';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import { onMounted, shallowRef, watch } from 'vue';
 
 async function forwardGeocode(config: MaplibreGeocoderApiConfig): Promise<MaplibreGeocoderFeatureResults> {
@@ -54,10 +56,12 @@ export default {
         const container = shallowRef(null);
         const element = shallowRef(null);
         let map: Map | null = null;
-        let marker: maplibregl.Marker | null = null;
+        let marker: Marker | null = null;
 
         onMounted(() => {
             const initialState = { lng: 4.4, lat: 50.534, zoom: 6 };
+
+            setWorkerUrl(workerUrl);
 
             map = new Map({
                 container: container.value,

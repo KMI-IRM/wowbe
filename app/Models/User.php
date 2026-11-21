@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Observers\UserObserver;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -15,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, HasUuids, Notifiable;
 
     /**

@@ -6,14 +6,18 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        php-version: [8.4, 8.5]
-        node-version: [24]
+        php-version: [8.4, 8.5, 8.6]
+        node-version: [24, 26]
+      fail-fast: false
 
     services:
       postgres:
@@ -31,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -41,7 +45,7 @@ jobs:
           coverage: xdebug
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -51,7 +55,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: php-cache-${{ runner.os }}-${{ runner.arch }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -86,7 +90,7 @@ jobs:
           DB_PASSWORD: phpunit
 
       - name: Code Coverage Summary Report
-        uses: saschanowak/CloverCodeCoverageSummary@1.1.0
+        uses: saschanowak/CloverCodeCoverageSummary@1.1.1
         with:
           filename: .phpunit.coverage.clover.xml
       - name: Add Code Coverage Report to Job Summary

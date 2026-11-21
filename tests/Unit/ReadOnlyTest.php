@@ -3,6 +3,11 @@
 namespace Tests\Unit;
 
 use App\Exceptions\ReadOnlyException;
+use App\Models\DayAggregate;
+use App\Models\FiveMinutesAggregate;
+use App\Models\Observation;
+use App\Models\Site;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,7 +20,7 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\DayAggregate] is read-only and cannot be created.');
 
-        $dayAggregate = new \App\Models\DayAggregate;
+        $dayAggregate = new DayAggregate;
         $dayAggregate->save();
     }
 
@@ -24,9 +29,9 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\DayAggregate] is read-only and cannot be updated.');
 
-        $user = \App\Models\User::factory()->createOne();
-        $site = \App\Models\Site::factory()->createOne(['user_id' => $user->id]);
-        \App\Models\Observation::factory()->count(5)->create(['site_id' => $site->id]);
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+        Observation::factory()->count(5)->create(['site_id' => $site->id]);
 
         $agg = $site->dayAggregate()->first();
         $agg->name = 'Updated Name';
@@ -38,9 +43,9 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\DayAggregate] is read-only and cannot be deleted.');
 
-        $user = \App\Models\User::factory()->createOne();
-        $site = \App\Models\Site::factory()->createOne(['user_id' => $user->id]);
-        \App\Models\Observation::factory()->count(5)->create(['site_id' => $site->id]);
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+        Observation::factory()->count(5)->create(['site_id' => $site->id]);
 
         $agg = $site->dayAggregate()->first();
         $agg->delete();
@@ -51,7 +56,7 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\FiveMinutesAggregate] is read-only and cannot be created.');
 
-        $dayAggregate = new \App\Models\FiveMinutesAggregate;
+        $dayAggregate = new FiveMinutesAggregate;
         $dayAggregate->save();
     }
 
@@ -60,9 +65,9 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\FiveMinutesAggregate] is read-only and cannot be updated.');
 
-        $user = \App\Models\User::factory()->createOne();
-        $site = \App\Models\Site::factory()->createOne(['user_id' => $user->id]);
-        \App\Models\Observation::factory()->count(5)->create(['site_id' => $site->id]);
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+        Observation::factory()->count(5)->create(['site_id' => $site->id]);
 
         $agg = $site->fiveMinutesAggregate()->first();
         $agg->name = 'Updated Name';
@@ -74,9 +79,9 @@ class ReadOnlyTest extends TestCase
         $this->expectException(ReadOnlyException::class);
         $this->expectExceptionMessage('The model [App\\Models\\FiveMinutesAggregate] is read-only and cannot be deleted.');
 
-        $user = \App\Models\User::factory()->createOne();
-        $site = \App\Models\Site::factory()->createOne(['user_id' => $user->id]);
-        \App\Models\Observation::factory()->count(5)->create(['site_id' => $site->id]);
+        $user = User::factory()->createOne();
+        $site = Site::factory()->createOne(['user_id' => $user->id]);
+        Observation::factory()->count(5)->create(['site_id' => $site->id]);
 
         $agg = $site->fiveMinutesAggregate()->first();
         $agg->delete();

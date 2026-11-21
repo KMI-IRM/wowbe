@@ -11,7 +11,7 @@ class ProfileUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_profile_page_is_displayed()
+    public function test_profile_page_is_displayed(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -23,7 +23,7 @@ class ProfileUpdateTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated()
+    public function test_profile_information_can_be_updated(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -47,7 +47,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged()
+    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -67,7 +67,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
-    public function test_user_can_delete_their_account()
+    public function test_user_can_delete_their_account(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -86,7 +86,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->fresh());
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account()
+    public function test_correct_password_must_be_provided_to_delete_account(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -105,7 +105,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNotNull($user->fresh());
     }
 
-    public function test_oauth_user_can_delete_their_account_without_password()
+    public function test_oauth_user_can_delete_their_account_without_password(): void
     {
         /** @var User $user */
         $user = User::factory()->create([
@@ -125,7 +125,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->fresh());
     }
 
-    public function test_user_can_delete_account_and_force_delete_sites()
+    public function test_user_can_delete_account_and_force_delete_sites(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -151,7 +151,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull(Site::withTrashed()->find($site->id));
     }
 
-    public function test_user_can_delete_account_and_soft_delete_sites()
+    public function test_user_can_delete_account_and_soft_delete_sites(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -178,7 +178,7 @@ class ProfileUpdateTest extends TestCase
         $this->assertTrue(Site::withTrashed()->find($site->id)->trashed());
     }
 
-    public function test_oauth_user_can_delete_account_with_force_delete_data()
+    public function test_oauth_user_can_delete_account_with_force_delete_data(): void
     {
         /** @var User $user */
         $user = User::factory()->create([

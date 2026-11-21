@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Helpers\SiteHelper;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -17,7 +18,7 @@ class SiteTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function test_site_registration_page_is_displayed()
+    public function test_site_registration_page_is_displayed(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -27,7 +28,7 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_site_registration_pincode_can_be_completed()
+    public function test_site_registration_pincode_can_be_completed(): void
     {
         Event::fake();
 
@@ -54,7 +55,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_registration_password_can_be_completed()
+    public function test_site_registration_password_can_be_completed(): void
     {
         Event::fake();
 
@@ -79,7 +80,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_registration_noauth()
+    public function test_site_registration_noauth(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -96,7 +97,7 @@ class SiteTest extends TestCase
         $response->assertSessionHasErrors(['pincode', 'password']);
     }
 
-    public function test_site_registration_picture_can_be_completed()
+    public function test_site_registration_picture_can_be_completed(): void
     {
         Storage::fake('media');
 
@@ -125,7 +126,7 @@ class SiteTest extends TestCase
         Storage::disk('media')->assertExists('1/site_picture.jpg');
     }
 
-    public function test_site_update_page_is_displayed()
+    public function test_site_update_page_is_displayed(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -144,7 +145,7 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_site_information_can_be_updated()
+    public function test_site_information_can_be_updated(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -177,7 +178,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_picture_can_be_added()
+    public function test_site_picture_can_be_added(): void
     {
         Storage::fake('media');
 
@@ -212,7 +213,7 @@ class SiteTest extends TestCase
         Storage::disk('media')->assertExists('2/new_picture.jpg');
     }
 
-    public function test_site_picture_can_be_removed()
+    public function test_site_picture_can_be_removed(): void
     {
         Storage::fake('media');
 
@@ -241,7 +242,7 @@ class SiteTest extends TestCase
         Storage::disk('media')->assertMissing('1/picture_to_remove.jpg');
     }
 
-    public function test_site_picture_remove_with_non_existent_uuid()
+    public function test_site_picture_remove_with_non_existent_uuid(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -264,7 +265,7 @@ class SiteTest extends TestCase
         $response->assertRedirectBack();
     }
 
-    public function test_site_picture_remove_multiple_existing_media()
+    public function test_site_picture_remove_multiple_existing_media(): void
     {
         Storage::fake('media');
 
@@ -309,7 +310,7 @@ class SiteTest extends TestCase
         $this->assertCount(0, $site->fresh()->getMedia('pictures'));
     }
 
-    public function test_site_auth_page_is_displayed()
+    public function test_site_auth_page_is_displayed(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -328,7 +329,7 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_site_auth_can_be_updated_with_pincode()
+    public function test_site_auth_can_be_updated_with_pincode(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -357,7 +358,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_auth_can_be_updated_with_password()
+    public function test_site_auth_can_be_updated_with_password(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -386,7 +387,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_delete_page_is_displayed()
+    public function test_site_delete_page_is_displayed(): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -405,7 +406,7 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_site_can_be_deleted_with_pincode()
+    public function test_site_can_be_deleted_with_pincode(): void
     {
         Event::fake();
 
@@ -434,7 +435,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_cant_be_deleted_with_wrong_pincode()
+    public function test_site_cant_be_deleted_with_wrong_pincode(): void
     {
         Event::fake();
 
@@ -464,7 +465,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_can_be_deleted_with_password()
+    public function test_site_can_be_deleted_with_password(): void
     {
         Event::fake();
 
@@ -493,7 +494,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_cant_be_deleted_with_wrong_password()
+    public function test_site_cant_be_deleted_with_wrong_password(): void
     {
         Event::fake();
 
@@ -523,7 +524,7 @@ class SiteTest extends TestCase
         ]);
     }
 
-    public function test_site_short_id_is_generated_on_creation()
+    public function test_site_short_id_is_generated_on_creation(): void
     {
         /** @var User $user */
         $user = User::factory()->createOne();
@@ -531,5 +532,62 @@ class SiteTest extends TestCase
 
         $this->assertNotEmpty($site->short_id);
         $this->assertEquals(SiteHelper::getShortId($site), $site->short_id);
+    }
+
+    public function test_site_mac_address_is_unique()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $user->sites()->create([
+            'name' => 'Test Site 1',
+            'longitude' => 4.3415232,
+            'latitude' => 50.8949242,
+            'altitude' => 93.0,
+            'timezone' => 'Europe/Brussels',
+            'auth_key' => 'securepassword',
+            'mac_address' => '00:11:22:33:44:55',
+        ]);
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        $user->sites()->create([
+            'name' => 'Test Site 2',
+            'longitude' => 4.3415232,
+            'latitude' => 50.8949242,
+            'altitude' => 93.0,
+            'timezone' => 'Europe/Brussels',
+            'auth_key' => 'securepassword',
+            'mac_address' => '00:11:22:33:44:55',
+        ]);
+    }
+
+    public function test_site_mac_address_is_unique_even_deleted()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $site = $user->sites()->create([
+            'name' => 'Test Site 1',
+            'longitude' => 4.3415232,
+            'latitude' => 50.8949242,
+            'altitude' => 93.0,
+            'timezone' => 'Europe/Brussels',
+            'auth_key' => 'securepassword',
+            'mac_address' => '00:11:22:33:44:55',
+        ]);
+        $site->delete();
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        $user->sites()->create([
+            'name' => 'Test Site 2',
+            'longitude' => 4.3415232,
+            'latitude' => 50.8949242,
+            'altitude' => 93.0,
+            'timezone' => 'Europe/Brussels',
+            'auth_key' => 'securepassword',
+            'mac_address' => '00:11:22:33:44:55',
+        ]);
     }
 }

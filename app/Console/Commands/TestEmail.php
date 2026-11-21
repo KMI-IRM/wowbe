@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Http\Middleware\Localization;
+use App\Mail\AccountCreated;
+use App\Mail\AccountDeleted;
+use App\Mail\SiteCreated;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -64,9 +67,9 @@ class TestEmail extends Command implements PromptsForMissingInput
         foreach ($classes as $class) {
             /** @var Mailable $mailable */
             $mailable = match ($class) {
-                \App\Mail\SiteCreated::class => new $class(site: Site::inRandomOrder()->first()),
-                \App\Mail\AccountCreated::class,
-                \App\Mail\AccountDeleted::class => new $class(user: User::inRandomOrder()->first()),
+                SiteCreated::class => new $class(site: Site::inRandomOrder()->first()),
+                AccountCreated::class,
+                AccountDeleted::class => new $class(user: User::inRandomOrder()->first()),
                 default => new $class, // @codeCoverageIgnore
             };
 

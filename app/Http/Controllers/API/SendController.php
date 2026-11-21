@@ -31,9 +31,13 @@ class SendController extends Controller
      * - [Ecowitt protocol](/operations/send.ecowitt)
      * - [Weather Underground protocol](/operations/send.weatherunderground)
      *
+     * Requests are rate limited to **20 per minute per site** (HTTP 429 on excess).
+     *
      * @throws ValidationException
      */
     #[Response(status: 200, description: '`ObservationResource`')]
+    #[Response(status: 403, description: 'Invalid site credentials', type: 'array{message: string}')]
+    #[Response(status: 429, description: 'Too many requests')]
     public function __invoke(Request $request): JsonResponse
     {
         // Detect Ecowitt protocol
@@ -55,6 +59,8 @@ class SendController extends Controller
      *
      * You also can also use the global [`/send` endpoint](/operations/send).
      */
+    #[Response(status: 403, description: 'Invalid site credentials', type: 'array{message: string}')]
+    #[Response(status: 429, description: 'Too many requests')]
     public function wow(SendRequest $request): JsonResponse
     {
         return $this->handleRequest($request);
@@ -65,6 +71,7 @@ class SendController extends Controller
      *
      * You also can also use the global [`/send` endpoint](/operations/send).
      */
+    #[Response(status: 429, description: 'Too many requests')]
     public function ecowitt(EcowittSendRequest $request): JsonResponse
     {
         return $this->handleEcowittRequest($request);
@@ -75,6 +82,8 @@ class SendController extends Controller
      *
      * You also can also use the global [`/send` endpoint](/operations/send).
      */
+    #[Response(status: 403, description: 'Invalid site credentials', type: 'array{message: string}')]
+    #[Response(status: 429, description: 'Too many requests')]
     public function weatherunderground(WeatherUndergroundSendRequest $request): JsonResponse
     {
         return $this->handleWeatherUndergroundRequest($request);
@@ -95,7 +104,7 @@ class SendController extends Controller
 
         // Check authorization
         $siteID = $request->input('siteid');
-        $siteAuthenticationKey = $request->input('siteAuthenticationKey');
+        $siteAuthKey = $request->input('siteAuthenticationKey');
 
         if (Str::isUuid($siteID) === true) {
             /** @var Site $site */
@@ -105,8 +114,8 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || $site->auth_key !== $siteAuthenticationKey) {
-            abort(403);
+        if (is_null($siteAuthKey) || hash_equals($site->auth_key, $siteAuthKey) === false) {
+            abort(403, 'Invalid site credentials');
         }
 
         $observation = $this->createObservation($validated, $site);
@@ -158,7 +167,7 @@ class SendController extends Controller
 
         // Check authorization
         $siteID = $request->input('ID');
-        $siteAuthenticationKey = $request->input('PASSWORD');
+        $siteAuthKey = $request->input('PASSWORD');
 
         if (Str::isUuid($siteID) === true) {
             /** @var Site $site */
@@ -168,8 +177,8 @@ class SendController extends Controller
             $site = Site::where('short_id', $siteID)->firstOrFail();
         }
 
-        if (is_null($siteAuthenticationKey) || $site->auth_key !== $siteAuthenticationKey) {
-            abort(403);
+        if (is_null($siteAuthKey) || hash_equals($site->auth_key, $siteAuthKey) === false) {
+            abort(403, 'Invalid site credentials');
         }
 
         $observation = $this->createObservation($validated, $site);

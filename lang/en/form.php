@@ -66,6 +66,7 @@ return [
         'pincode_description' => 'Set a 6 digits PIN code as authentication key.',
         'password' => 'Password',
         'password_description' => 'Set a password as authentication key.',
+        'alphanumeric_hint' => 'We recommend using only letters and digits (0-9, a-z, A-Z) for the authentication key. Some station consoles are not able to send certain symbols correctly.',
         'mac_address' => 'MAC address of the station',
         'mac_address_description' => 'If you want to use the **Ecowitt protocol** to upload observations from your station, you must provide the MAC address (including colons) because it\'s used as authentication method.',
     ],

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\API;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EcowittSendRequest extends FormRequest
@@ -9,41 +10,41 @@ class EcowittSendRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             // Date & Time in UTC
-            'dateutc' => ['required', 'date_format:Y-m-d H:i:s'],
+            'dateutc' => ['required', 'date_format:Y-m-d H:i:s,Y-m-d\TH:i:s\Z'],
             // PassKey (MD5 hash of site MAC-address)
             'PASSKEY' => ['required', 'string'],
 
             // Station Type
             'stationtype' => ['string'],
-            // Absolute Pressure i.e. raw pressure measurement at the station's location (Inch of Mercury)
+            // Absolute Pressure i.e. raw pressure measurement at the station's location (Inch of Mercury) (float)
             'baromabsin' => ['numeric'],
-            // Relative Pressure i.e. pressure adjusted to sea level (Inch of Mercury)
+            // Relative Pressure i.e. pressure adjusted to sea level (Inch of Mercury) (float)
             'baromrelin' => ['numeric'],
-            // Daily Accumulated rainfall so far today (Inches)
+            // Daily Accumulated rainfall so far today (Inches) (float)
             'dailyrainin' => ['numeric'],
             // Daily Accumulated rainfall (piezo) so far today (Inches)
             'dailyrainin_pz' => ['numeric'],
-            // Outdoor Humidity (0-100 %)
+            // Outdoor Humidity (0-100 %) (float)
             'humidity' => ['numeric'],
             // Site Model
             'model' => ['string'],
-            // Instantaneous Rain Rate (Inches/h)
+            // Instantaneous Rain Rate (Inches/h) (float)
             'rainratein' => ['numeric'],
-            // Solar Radiation (Watt per Square Metre)
+            // Solar Radiation (Watt per Square Metre) (float)
             'solarradiation' => ['numeric'],
-            // Outdoor Temperature (Fahrenheit)
+            // Outdoor Temperature (Fahrenheit) (float)
             'tempf' => ['numeric'],
-            // Instantaneous Wind Direction (Degrees (0-360))
+            // Instantaneous Wind Direction (Degrees (0-360)) (float)
             'winddir' => ['numeric'],
-            // Current Wind Gust Speed (using software specific time period) (Miles per Hour)
+            // Current Wind Gust Speed (using software specific time period) (Miles per Hour) (float)
             'windgustmph' => ['numeric'],
-            // Instantaneous Wind Speed (Miles per Hour)
+            // Instantaneous Wind Speed (Miles per Hour) (float)
             'windspeedmph' => ['numeric'],
 
             // 'absbaromin' => ['numeric'], // Overwritten by `baromabsin`
@@ -52,27 +53,27 @@ class EcowittSendRequest extends FormRequest
             // 'softwaretype' => ['string'], // Overwritten by `stationtype`
 
             /**
-             * Outdoor Dewpoint (Fahrenheit)
+             * Outdoor Dewpoint (Fahrenheit) (float)
              * *Not part of Ecowitt protocol but supported by WOW-BE backend.*
              */
             'dewptf' => ['numeric'],
             /**
-             * % Moisture (0-100 %)
+             * % Moisture (0-100 %) (float)
              * *Not part of Ecowitt protocol but supported by WOW-BE backend.*
              */
             'soilmoisture' => ['numeric'],
             /**
-             * Soil Temperature (10cm) (Fahrenheit)
+             * Soil Temperature (10cm) (Fahrenheit) (float)
              * *Not part of Ecowitt protocol but supported by WOW-BE backend.*
              */
             'soiltempf' => ['numeric'],
             /**
-             * Visibility (Kilometres)
+             * Visibility (Kilometres) (float)
              * *Not part of Ecowitt protocol but supported by WOW-BE backend.*
              */
             'visibility' => ['numeric'],
             /**
-             * Current Wind Gust Direction (using software specific time period) (Degrees (0-360))
+             * Current Wind Gust Direction (using software specific time period) (Degrees (0-360)) (float)
              * *Not part of Ecowitt protocol but supported by WOW-BE backend.*
              */
             'windgustdir' => ['numeric'],

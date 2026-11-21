@@ -1,0 +1,15 @@
+# PHPMD configuration, see https://phpmd.org/documentation/creating-a-ruleset.html
+name: PHPMD configuration for wowbe
+paths:
+  - app/
+  - bootstrap/
+  - config/
+  - database/
+  - public/
+  - routes/
+  - tests/
+exclude-pattern:
+  - node_modules/
+  - vendor/
+rules:
+  - ref: phpmd.xml

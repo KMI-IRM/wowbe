@@ -22,6 +22,7 @@ Route::prefix('site')
                 Route::get('', 'show');
                 Route::get('latest', 'latest');
                 Route::get('daily', 'daily');
+                Route::get('daily-local', 'dailyLocal');
                 Route::get('graph', 'graph');
             });
     });

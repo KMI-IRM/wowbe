@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\APIVersionMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\Localization;
@@ -27,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'api.version' => \App\Http\Middleware\APIVersionMiddleware::class,
+            'api.version' => APIVersionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

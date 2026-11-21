@@ -63,6 +63,7 @@ return [
         'pincode_description' => 'Stel een pincode van 6 cijfers in als authenticatiesleutel.',
         'password' => 'Wachtwoord',
         'password_description' => 'Stel een wachtwoord in als authenticatiesleutel.',
+        'alphanumeric_hint' => 'We raden aan om enkel letters en cijfers (0-9, a-z, A-Z) te gebruiken voor de authenticatiesleutel. Sommige stationsconsoles kunnen bepaalde symbolen niet correct verzenden.',
         'mac_address' => 'MAC-adres van het station',
         'mac_address_description' => 'Als je het **Ecowitt-protocol** wilt gebruiken om observaties van je station te uploaden, moet je het MAC-adres opgeven (inclusief dubbele punten) omdat dit wordt gebruikt als authenticatiemethode.',
     ],

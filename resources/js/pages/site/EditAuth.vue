@@ -105,6 +105,7 @@ const submit = () => {
                                         <Label for="auth_key_password">{{ trans('form.menu.authentication') }}</Label>
                                         <Input id="auth_key_password" type="text" required v-model="form.password" />
                                         <InputError :message="form.errors.password" />
+                                        <p class="text-muted-foreground text-sm">{{ trans('form.authentication.alphanumeric_hint') }}</p>
                                     </FormItem>
                                 </CardContent>
                             </Card>

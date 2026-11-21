@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Observation;
 use App\Models\Site;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Observation>
+ * @extends Factory<Observation>
  */
 class ObservationFactory extends Factory
 {

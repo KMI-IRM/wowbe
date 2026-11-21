@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\Site;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -37,15 +38,18 @@ class SiteCreated extends Mailable
      */
     public function content(): Content
     {
+        /** @phpstan-var view-string $markdown */
+        $markdown = "mail.{$this->locale}.site-created";
+
         return new Content(
-            markdown: "mail.{$this->locale}.site-created",
+            markdown: $markdown,
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
