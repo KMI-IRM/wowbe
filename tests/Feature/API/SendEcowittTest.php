@@ -176,7 +176,7 @@ class SendEcowittTest extends TestCase
             'windspeedmph' => $this->faker->randomFloat(2, 0, 100),
             'windgustmph' => $this->faker->randomFloat(2, 0, 100),
             // 'rainratein' => $this->faker->randomFloat(2, 0, 10),
-            'dailyrainin_pz' => $this->faker->randomFloat(2, 0, 10),
+            'drain_piezo' => $this->faker->randomFloat(2, 0, 10),
             'solarradiation' => $this->faker->randomFloat(2, 0, 1000),
             'model' => $this->faker->word(),
         ];
@@ -213,7 +213,7 @@ class SendEcowittTest extends TestCase
             'site_id' => $site->id,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
-            'dailyrainin' => $data['dailyrainin_pz'],
+            'dailyrainin' => $data['drain_piezo'],
         ]);
     }
 

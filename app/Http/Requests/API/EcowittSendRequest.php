@@ -29,7 +29,7 @@ class EcowittSendRequest extends FormRequest
             // Daily Accumulated rainfall so far today (Inches) (float)
             'dailyrainin' => ['numeric'],
             // Daily Accumulated rainfall (piezo) so far today (Inches)
-            'dailyrainin_pz' => ['numeric'],
+            'drain_piezo' => ['numeric'],
             // Outdoor Humidity (0-100 %) (float)
             'humidity' => ['numeric'],
             // Site Model
