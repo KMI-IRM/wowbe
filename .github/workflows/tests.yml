@@ -15,8 +15,8 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.4, 8.5]
-        node-version: [24]
+        php-version: [8.4, 8.5, 8.6]
+        node-version: [24, 26]
 
     services:
       postgres:
