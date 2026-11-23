@@ -7,6 +7,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Pennant\Feature;
 use Spatie\CpuLoadHealthCheck\CpuLoadCheck;
 use Spatie\Health\Checks\Checks;
 use Spatie\Health\Facades\Health;
@@ -55,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
                 ->warnWhenUsedSpaceIsAbovePercentage(60)
                 ->failWhenUsedSpaceIsAbovePercentage(80),
         ]);
+
+        Feature::define('no-old-observations', fn () => (bool) config('pennant.flags.no-old-observations', false));
 
         RateLimiter::for('send', function (Request $request) {
             // Each protocol identifies the site differently: WOW uses `siteid`,

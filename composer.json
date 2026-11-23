@@ -13,6 +13,7 @@
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^13.0",
         "laravel/octane": "^2.9",
+        "laravel/pennant": "^1.27",
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^3.0",
         "spatie/cpu-load-health-check": "^1.0",

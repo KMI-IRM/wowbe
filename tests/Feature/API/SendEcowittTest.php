@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Pennant\Feature;
 use Tests\TestCase;
 
 class SendEcowittTest extends TestCase
@@ -211,6 +212,78 @@ class SendEcowittTest extends TestCase
             'stationtype' => $this->faker->sha256(),
             'tempf' => $this->faker->randomFloat(2, -40, 212),
         ];
+    }
+
+    public function test_datetime_period(): void
+    {
+        Feature::define('no-old-observations', true);
+        $this->assertSame(true, Feature::value('no-old-observations'));
+
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $site = $user->sites()->create([
+            'name' => 'Test Site',
+            'longitude' => 4.3415232,
+            'latitude' => 50.8949242,
+            'altitude' => 93.0,
+            'timezone' => 'Europe/Brussels',
+            'auth_key' => 'securepassword',
+            'mac_address' => $this->faker->macAddress(),
+        ]);
+
+        // Create observation for now
+        $this
+            ->post('/api/v2/send', [
+                'PASSKEY' => strtoupper(md5($site->mac_address)),
+                'dateutc' => today(),
+                'stationtype' => $this->faker->sha256(),
+                'tempf' => $this->faker->randomFloat(2, -40, 212),
+            ])
+            ->assertOK();
+
+        // Create observation for 7 days ago
+        $this
+            ->post('/api/v2/send', [
+                'PASSKEY' => strtoupper(md5($site->mac_address)),
+                'dateutc' => today()->subDays(7),
+                'stationtype' => $this->faker->sha256(),
+                'tempf' => $this->faker->randomFloat(2, -40, 212),
+            ])
+            ->assertOK();
+
+        // Create observation for the first day of last month
+        $this
+            ->post('/api/v2/send', [
+                'PASSKEY' => strtoupper(md5($site->mac_address)),
+                'dateutc' => today()->subMonth()->dayOfMonth(1),
+                'stationtype' => $this->faker->sha256(),
+                'tempf' => $this->faker->randomFloat(2, -40, 212),
+            ])
+            ->assertOK();
+
+        // Create observation for 2 months ago
+        $this
+            ->post('/api/v2/send', [
+                'PASSKEY' => strtoupper(md5($site->mac_address)),
+                'dateutc' => today()->subMonths(2),
+                'stationtype' => $this->faker->sha256(),
+                'tempf' => $this->faker->randomFloat(2, -40, 212),
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['dateutc']);
+
+        // Create observation for 2 months ago without the "no-old-observations" feature enabled
+        Feature::deactivate('no-old-observations');
+        $this->assertSame(false, Feature::value('no-old-observations'));
+        $this
+            ->post('/api/v2/send', [
+                'PASSKEY' => strtoupper(md5($site->mac_address)),
+                'dateutc' => today()->subMonths(2),
+                'stationtype' => $this->faker->sha256(),
+                'tempf' => $this->faker->randomFloat(2, -40, 212),
+            ])
+            ->assertOK();
     }
 
     public function test_empty_observation(): void

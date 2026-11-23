@@ -5,6 +5,8 @@ namespace App\Http\Requests\API;
 use App\Rules\SiteID;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Laravel\Pennant\Feature;
 
 class WeatherUndergroundSendRequest extends FormRequest
 {
@@ -23,7 +25,11 @@ class WeatherUndergroundSendRequest extends FormRequest
             // Authentication Key (PIN code or Password)
             'PASSWORD' => ['required', 'string'],
             // Date & Time in UTC
-            'dateutc' => ['required', 'date_format:Y-m-d H:i:s,Y-m-d\TH:i:s\Z'],
+            'dateutc' => [
+                'required',
+                'date_format:Y-m-d H:i:s,Y-m-d\TH:i:s\Z',
+                Feature::active('no-old-observations') === true ? Rule::date()->afterOrEqual(today()->subMonth()->startOfMonth()) : '',
+            ],
 
             // Action (supposed to be `action=updateraw`)
             'action' => ['string'],
