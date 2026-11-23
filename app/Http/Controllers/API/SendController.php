@@ -144,7 +144,8 @@ class SendController extends Controller
         $validated['softwaretype'] = $validated['stationtype'];
         $validated['baromin'] = $validated['baromrelin'] ?? null;
         $validated['absbaromin'] = $validated['baromabsin'] ?? null;
-        $validated['rainin'] = $validated['rainratein'] ?? null;
+        $validated['rainin'] = $validated['rainratein'] ?? $validated['rrain_piezo'] ?? null;
+        $validated['dailyrainin'] = $validated['dailyrainin'] ?? $validated['drain_piezo'] ?? null;
 
         $observation = $this->createObservation($validated, $site);
 
