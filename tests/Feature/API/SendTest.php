@@ -168,12 +168,14 @@ class SendTest extends TestCase
 
         $hash = $this->faker->sha256();
         $datetime = now()->utc();
+        $tempf = $this->faker->randomFloat(2, -50, 50);
 
         $data = [
             'siteid' => $site->id,
             'siteAuthenticationKey' => $site->auth_key,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
+            'tempf' => $tempf,
         ];
 
         $this
@@ -192,6 +194,7 @@ class SendTest extends TestCase
             'site_id' => $site->id,
             'dateutc' => $datetime->format('Y-m-d H:i:s'),
             'softwaretype' => $hash,
+            'tempf' => $tempf,
         ]);
     }
 
@@ -291,7 +294,9 @@ class SendTest extends TestCase
             'siteAuthenticationKey' => $site->auth_key,
             'dateutc' => now()->utc()->format('Y-m-d H:i:s'),
             'softwaretype' => $this->faker->word(),
+            'tempf' => $this->faker->randomFloat(2, -40, 212),
         ];
+        dump($data);
 
         $this
             ->post('/api/v2/send', $data)
