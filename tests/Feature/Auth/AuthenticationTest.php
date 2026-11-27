@@ -74,4 +74,18 @@ class AuthenticationTest extends TestCase
 
         $response->assertStatus(429);
     }
+
+    public function test_submission_rate_limit_is_separate_for_each_ip(): void
+    {
+        $this->withServerVariables(['REMOTE_ADDR' => '192.0.2.1']);
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->post('/web/login')->assertRedirect();
+        }
+
+        $this->post('/web/login')->assertStatus(429);
+
+        $this->withServerVariables(['REMOTE_ADDR' => '192.0.2.2']);
+        $this->post('/web/login')->assertRedirect();
+    }
 }
