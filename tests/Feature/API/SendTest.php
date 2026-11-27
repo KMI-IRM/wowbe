@@ -296,7 +296,6 @@ class SendTest extends TestCase
             'softwaretype' => $this->faker->word(),
             'tempf' => $this->faker->randomFloat(2, -40, 212),
         ];
-        dump($data);
 
         $this
             ->post('/api/v2/send', $data)
