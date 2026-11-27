@@ -96,7 +96,7 @@ export default {
                     const coordinates = features[0].geometry.coordinates.slice();
                     const datetime = new Date(features[0].properties.timestamp);
                     const name = features[0].properties.name;
-                    const reading = JSON.parse(features[0].properties.primary);
+                    const reading = features[0].properties.primary;
 
                     // Ensure that if the map is zoomed out such that multiple
                     // copies of the feature are visible, the popup appears
@@ -117,7 +117,7 @@ export default {
                                 (reading.dws !== null ? `<li>${trans('observation.wind_speed')}: ${reading.dws.toFixed(1)} km/h</li>` : '') +
                                 (reading.dwd !== null ? `<li>${trans('observation.wind_direction')}: ${reading.dwd.toFixed(0)}°</li>` : '') +
                                 (reading.dh !== null ? `<li>${trans('observation.humidity')}: ${reading.dh.toFixed(1)} %</li>` : '') +
-                                (reading.dap !== null ? `<li>${trans('observation.pressure')}: ${reading.dap.toFixed(1)} hPa</li>` : '') +
+                                (reading.dm !== null ? `<li>${trans('observation.pressure')}: ${reading.dm.toFixed(1)} hPa</li>` : '') +
                                 `</ul>`,
                         )
                         .addTo(map);
