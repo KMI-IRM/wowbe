@@ -16,7 +16,7 @@ const handleFeatureClick = (feature: GeoJSONFeature) => {
     sheetTitle.value = feature.properties.name;
     sheetDescription.value = new Date(feature.properties.timestamp).toLocaleString();
 
-    latestObservation.value = JSON.parse(feature.properties.primary);
+    latestObservation.value = feature.properties.primary;
 
     fetch(route('api.site.graph', { site: feature.properties.site_id }))
         .then((response) => response.json())
